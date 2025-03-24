@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오늘의 메뉴 추천</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin-top: 50px;
+        }
+        input, button, select {
+            padding: 10px;
+            margin: 10px;
+        }
+        #result {
+            font-size: 20px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>오늘의 메뉴 추천</h1>
+    <p>오늘 먹을 음식을 추천해드릴게요!</p>
+
+    <!-- 음식 카테고리 선택 -->
+    <label for="foodCategory">음식 카테고리 선택:</label>
+    <select id="foodCategory">
+        <option value="all">전체</option>
+        <option value="korean">한식</option>
+        <option value="chinese">중식</option>
+        <option value="western">양식</option>
+    </select>
+
+    <br>
+
+    <!-- 매운 음식 선호도 선택 -->
+    <label for="spicyPreference">매운 음식 선호:</label>
+    <select id="spicyPreference">
+        <option value="any">상관없음</option>
+        <option value="spicy">매운 음식</option>
+        <option value="non-spicy">매운 음식 안 좋아함</option>
+    </select>
+
+    <br>
+
+    <button onclick="getFoodRecommendation()">메뉴 추천</button>
+
+    <h2>추천된 메뉴:</h2>
+    <p id="result"></p>
+
+    <script>
+        const foodList = {
+            korean: ["비빔밥", "떡볶이", "김치찌개", "불고기", "김밥"],
+            chinese: ["짜장면", "짬뽕", "마파두부", "탕수육", "볶음밥"],
+            western: ["피자", "파스타", "햄버거", "스테이크", "샐러드"]
+        };
+
+        const spicyFoods = ["떡볶이", "김치찌개", "짬뽕", "마파두부"];
+
+        function getFoodRecommendation() {
+            const category = document.getElementById("foodCategory").value;
+            const spicyPreference = document.getElementById("spicyPreference").value;
+            let selectedFood;
+
+            let filteredFoods = filterFoods(category, spicyPreference);
+
+            if (filteredFoods.length > 0) {
+                selectedFood = getRandomFood(filteredFoods);
+            } else {
+                selectedFood = "조건에 맞는 음식이 없습니다.";
+            }
+
+            document.getElementById("result").innerText = selectedFood;
+        }
+
+        function filterFoods(category, spicyPreference) {
+            let foods = category === "all" ? Object.values(foodList).flat() : foodList[category];
+
+            if (spicyPreference === "spicy") {
+                foods = foods.filter(food => spicyFoods.includes(food));
+            } else if (spicyPreference === "non-spicy") {
+                foods = foods.filter(food => !spicyFoods.includes(food));
+            }
+
+            return foods;
+        }
+
+        function getRandomFood(foodArray) {
+            const randomIndex = Math.floor(Math.random() * foodArray.length);
+            return foodArray[randomIndex];
+        }
+    </script>
+</body>
+</html>
